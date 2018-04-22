@@ -1,0 +1,140 @@
+/** 
+ * 作者： 孙尊路
+ * 创建时间：2017/06/16 14:47:28
+ * 版本： [1.0, 2017/6/16]
+ * 版权： 江苏国泰新点软件有限公司
+ * 描述： 周历组件 
+**/
+body,
+.mui-content {
+	background-color: #eff1f3;
+}
+
+
+/*日志背景*/
+
+.em-journal-bg {
+	width: 100%;
+	height: 191px;
+	background-image: url(../img/img_address_bg.png);
+	background-size: 100% 100%;
+	padding: 31px 10px 0 10px;
+}
+
+.em-journal-title {
+	width: 100%;
+	display: block;
+	height: 40px;
+	line-height: 40px;
+}
+.em-per-block {
+	float: left;
+	width: 33%;
+	color: #fff;
+	font-size: 18px;
+}
+
+.em-per-block.pre {
+	text-align: left;
+	font-size: 15px;
+}
+.em-per-block.next:active,
+.em-per-block.pre:active{
+	background-color: #3a79d8;
+	border-radius: 15px;
+	font-weight: 800;
+}
+.em-per-block.mid {
+	text-align: center;
+	font-size: 18px;
+}
+
+.em-per-block.next {
+	text-align: right;
+	font-size: 15px;
+}
+
+
+/*列表*/
+
+.em-journal-pad {
+	margin-top: 30px;
+}
+
+.em-journal-pad.mui-table-view {
+	border-radius: 5px;
+}
+
+.em-journal-pad.mui-table-view:before,
+.em-journal-pad.mui-table-view:after {
+	height: 0px;
+}
+
+.em-journal-pad.mui-table-view .mui-table-view-cell {
+	height: 50px;
+}
+
+
+/*今天*/
+
+.em-journal-pad.mui-table-view .em-active.mui-table-view-cell .week {
+	display: inline-block;
+	background-color: #ebeffa;
+	border-left: 5px solid #5d78a2;
+	color: #5d78a2;
+	height: 50px;
+}
+
+.em-journal-pad.mui-table-view .em-active.mui-table-view-cell .day {
+	color: #5d78a2;
+}
+
+.em-journal-pad.mui-table-view .mui-table-view-cell:after {
+	left: 0px;
+}
+
+.em-journal-pad.mui-table-view .mui-table-view-cell>a:not(.mui-btn) {
+	line-height: 27px;
+	margin: -22px -30px;
+	line-height: 50px;
+}
+
+.em-journal-pad.mui-table-view .mui-table-view-cell>a:not(.mui-btn).mui-active {
+	/*border-radius: 5px;*/
+}
+
+.em-journal-pad.mui-table-view .mui-navigate-right:after,
+.em-journal-pad.mui-table-view .mui-push-right:after {
+	right: 20px;
+	content: '\e583';
+	font-size: 25px;
+}
+
+.em-journal-pad.mui-table-view .mui-navigate-right {
+	font-size: 17px;
+}
+
+.em-journal-pad.mui-table-view .mui-navigate-right .week {
+	display: inline-block;
+	color: #666666;
+	margin-right: 16px;
+	width: 68px;
+	text-align: center;
+}
+
+.em-journal-pad.mui-table-view .mui-navigate-right .week {
+	color: #333333;
+	text-align: center;
+}
+.em-journal-pad.mui-table-view .mui-navigate-right .status{
+	display: none;
+	float: right;
+	background-color:#3c80e6 ;
+	height: 19px;
+	color: #fff;
+	width: 50px;
+	margin: 15.5px 30px;
+	text-align: center;
+	line-height: 21px;
+	font-size: 13px;
+}

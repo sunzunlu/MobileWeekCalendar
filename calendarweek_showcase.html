@@ -1,0 +1,100 @@
+<!-- 
+        作者： 孙尊路
+        创建时间：2017-06-16 13:26:47
+        版本： [1.0, 2017/6/8]
+        版权： 江苏国泰新点软件有限公司
+        描述： 周历组件（可以使用，有时间去完善文档，如果有需求可以参考使用）
+-->
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>周历组件</title>
+		<!-- H5页面窗口自动调整到设备宽度，并控制用户缩放页面 -->
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<!-- IOS中禁用将数字识别为电话号码/忽略Android平台中对邮箱地址的识别 -->
+		<meta name="format-detection" content="telephone=no, email=no" />
+
+		<link rel="stylesheet" type="text/css" href="libs/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/calendar_base_week.css" />
+
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="em-journal-bg">
+				<!--顶部标题-->
+				<div class="em-journal-title">
+					<div class="em-per-block pre">
+						<span class="mui-icon mui-icon-arrowleft"></span>
+						<span>上一周</span>
+					</div>
+					<div class="em-per-block mid">
+						<span>2017-08</span>
+					</div>
+					<div class="em-per-block next">
+						<span>下一周</span>
+						<span class="mui-icon mui-icon-arrowright"></span>
+					</div>
+				</div>
+				<!--面板内容-->
+				<ul class="mui-table-view em-journal-pad" id="weekcalendar">
+
+				</ul>
+
+			</div>
+		</div>
+		<script src="libs/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="libs/mustache.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="libs/calendar_base_week.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			// 初始化
+			var CalendarWeek = new CalendarWeek({
+				// 默认周历组件容器
+				container: "#weekcalendar",
+				// 上一周元素
+				pre: ".pre",
+				// 下一周元素
+				next: ".next",
+				// 开启滑动时间，切换周历
+				isSwipe: false,
+				// 业务数据改变
+				dataRequest: function(callback, _this) {
+					var data = [{
+						date: "2018-01-30"
+					}, {
+						date: "2018-04-22"
+					}];
+					callback(data || []);
+				},
+				"preEvent": function(month) {
+					console.log("上周：" + month);
+					setTitle(month);
+				},
+				"nextEvent": function(month) {
+					console.log("下周：" + month);
+					setTitle(month);
+
+				},
+				// 点击日期事件
+				"onItemClick": function(item) {
+					this.querySelector('.status').style.display = 'block';
+					console.log(item.date + " " + item.week);
+					setTitle(item.date);
+
+				},
+				"success": function(date) {
+					document.querySelector('.mid span').innerText = date;
+				},
+				isDebug: false
+			});
+			// 设置标题
+			var titleNode = document.querySelector('.mid span');
+			function setTitle(date) {
+				titleNode.innerText = date;
+			}
+		</script>
+	</body>
+
+</html>
