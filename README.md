@@ -15,7 +15,7 @@
 
 - [周历示例演示，支持上一周、下一周切换等效果](http://app.epoint.com.cn/test/H5/Attaches/%E5%91%A8%E5%8E%86%E7%BB%84%E4%BB%B6/calendarweek_showcase/calendarweek_showcase.html) ` 注：按F12可在浏览器预览`
 
-- 示例demo源代码(H5)：[点击此处进行下载](https://github.com/sunzunlu/MobileCalendar)
+- 示例demo源代码(H5)：[点击此处进行下载](https://github.com/sunzunlu/MobileWeekCalendar)
 
 
 ## 典型项目应用案例
@@ -38,7 +38,7 @@ __DOM结构__
 
 __初始化__
 
-以下代码是最简单的用法，更多复杂用法请参考`calendarweek_showcase`[源码下载](http://app.epoint.com.cn/test/H5/Attaches/%E5%91%A8%E5%8E%86%E7%BB%84%E4%BB%B6/calendarweek_showcase/calendarweek_showcase.zip)
+以下代码是最简单的用法，更多复杂用法请参考`calendarweek_showcase`[源码下载](https://github.com/sunzunlu/MobileWeekCalendar)
 
 ```js
 var CalendarWeek = new CalendarWeek({
