@@ -22,6 +22,9 @@
 	</head>
 
 	<body>
+		<!--刷新周历-->
+		<button type="button" class="mui-btn mui-btn-red mui-btn-block" id="refresh" style="background: #3c80e6;">刷新周历组件</button>
+		<!--内容-->
 		<div class="mui-content">
 			<div class="em-journal-bg">
 				<!--顶部标题-->
@@ -44,13 +47,27 @@
 				</ul>
 
 			</div>
+
 		</div>
+
+		<!--当前日期模板-->
+		<script type="text/template" id="template">
+			<li class="mui-table-view-cell em-active" date="{{date_frame}}">
+				<a class="mui-navigate-right"><span class="week">{{week_frame}}</span><span class="day">{{month_frame}}月{{day_frame}}日</span><span class="status mui-hidden">零</span></a>
+			</li>
+		</script>
+		<!--非当前日期模板-->
+		<script type="text/template" id="template2">
+			<li class="mui-table-view-cell " date="{{date_frame}}">
+				<a class="mui-navigate-right"><span class="week">{{week_frame}}</span><span class="day">{{month_frame}}月{{day_frame}}日</span><span class="status mui-hidden">零</span></a>
+			</li>
+		</script>
 		<script src="libs/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/mustache.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/calendar_base_week.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			// 初始化
-			var CalendarWeek = new CalendarWeek({
+			var CalendarWeekObject = new CalendarWeek({
 				// 默认周历组件容器
 				container: "#weekcalendar",
 				// 上一周元素
@@ -59,41 +76,80 @@
 				next: ".next",
 				// 开启滑动时间，切换周历
 				isSwipe: false,
+				template: function (value, currdate, key) {
+					// console.log(value.date_frame);
+					// 选中状态
+					if(value.date_frame == currdate) {
+						var template = document.getElementById("template").innerHTML.trim()
+					} else {
+						var template = document.getElementById("template2").innerHTML.trim()
+					}
+					return template;
+				},
 				// 业务数据改变
-				dataRequest: function(callback, _this) {
+				dataRequest: function (callback, _this, range) {
+					var from = range.from; //开始时间
+					var to = range.to; //结束时间
+					console.log("切换日期区间：" + JSON.stringify(range) + "用于刷新业务接口");
+					// 一次请求7条数据，对应7天日期
 					var data = [{
-						date: "2018-01-30"
+						"title": "1",
+						"date1": "2018-08-08",
 					}, {
-						date: "2018-04-22"
+						"title": "2",
+						"date1": "2018-08-09"
+					}, {
+						"title": "3",
+						"date1": "2018-08-08",
+					}, {
+						"title": "4",
+						"date1": "2018-08-09"
+					}, {
+						"title": "5",
+						"date1": "2018-08-08",
+					}, {
+						"title": "6",
+						"date1": "2018-08-09"
+					}, {
+						"title": "7",
+						"date1": "2018-08-08",
 					}];
 					callback(data || []);
 				},
-				"preEvent": function(month) {
+				"preEvent": function (month) {
 					console.log("上周：" + month);
 					setTitle(month);
 				},
-				"nextEvent": function(month) {
+				"nextEvent": function (month) {
 					console.log("下周：" + month);
 					setTitle(month);
 
 				},
 				// 点击日期事件
-				"onItemClick": function(item) {
+				"onItemClick": function (item) {
 					this.querySelector('.status').style.display = 'block';
 					console.log(item.date + " " + item.week);
 					setTitle(item.date);
 
 				},
-				"success": function(date) {
+				"success": function (date, range) {
 					document.querySelector('.mid span').innerText = date;
+
 				},
 				isDebug: false
 			});
 			// 设置标题
 			var titleNode = document.querySelector('.mid span');
+
 			function setTitle(date) {
 				titleNode.innerText = date;
 			}
+			
+			// 外部刷新方法
+			document.querySelector('#refresh').addEventListener('tap',function () {
+			   CalendarWeekObject.refresh();     
+			});
+			
 		</script>
 	</body>
 
