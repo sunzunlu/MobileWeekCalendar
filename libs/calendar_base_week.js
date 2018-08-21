@@ -5,7 +5,7 @@
  * 版权: 江苏国泰新点软件有限公司
  * 说明： 常用工具js
  */
-window.innerUtil = window.innerUtil || (function (exports) {
+window.innerWeekUtil = window.innerWeekUtil || (function (exports) {
 
     /**
      * 产生一个 唯一uuid，默认为32位的随机字符串，8-4-4-4-12 格式
@@ -75,33 +75,6 @@ window.innerUtil = window.innerUtil || (function (exports) {
     exports.type = function (obj) {
         return(obj === null || obj === undefined) ? String(obj) : class2type[{}.toString.call(obj)] || 'object';
     };
-    exports.render = function (tpl, data) {
-        var fn = tpl.replace(/&lt;/g, '<').replace(/&gt;/g, '>') //    转义 <>
-            .replace(/(<%=)([\s\S]*?)(%>)/g, '$1_html_+= ($2)\n$3') // <%= %>  [\s\S]允许换行
-            .replace(/(<%)(?!=)([\s\S]*?)(%>)/g, '$1\n\t$2\n$3') // <% js code %>  (?!=)不要匹配到<%= %>
-            .replace(/(^|%>|%>)([\s\S]*?)(<%=|<%|$)/g, function ($, $1, $2, $3) { // 边界符外的html, html中的(\|"|\r|\n)要转义
-                return '_html_+= "' + $2.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\r?\n/g, '\\n') + '"\n'
-            });
-        return(fn = Function('data', 'with(data||{}){\nvar _html_=""\n' + fn + '\nreturn _html_\n}')), data ? fn(data) : fn
-    };
-    exports.render2 = function (html, options) {
-        var re = /<%([^%>]+)?%>/g,
-            reExp = /(^( )?(if|for|else|switch|case|break|{|}))(.*)?/g,
-            code = 'var r=[];\n',
-            cursor = 0;
-        var add = function (line, js) {
-            js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
-                (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
-            return add;
-        }
-        while(match = re.exec(html)) {
-            add(html.slice(cursor, match.index))(match[1], true);
-            cursor = match.index + match[0].length;
-        }
-        add(html.substr(cursor, html.length - cursor));
-        code += 'return r.join("");';
-        return new Function(code.replace(/[\r\t\n]/g, '')).apply(options);
-    }
     /**
      * each遍历操作
      * @param {Object} elements 元素
@@ -419,7 +392,7 @@ window.innerUtil = window.innerUtil || (function (exports) {
     };
 
     function CalendarWeek(options) {
-        options = innerUtil.extend({}, defaultOptions, options);
+        options = innerWeekUtil.extend({}, defaultOptions, options);
         this._initData(options);
         //绑定监听
         this._bindEvent();
@@ -524,7 +497,7 @@ window.innerUtil = window.innerUtil || (function (exports) {
                     for(var i = 0; i < tmpInfo.length; i++) {
                         // 合并合并
                         if(i == j) {
-                            tmpInfo[i] = innerUtil.extend(res[i], tmpInfo[i])
+                            tmpInfo[i] = innerWeekUtil.extend(res[i], tmpInfo[i])
                         }
                     }
                 }
@@ -533,7 +506,7 @@ window.innerUtil = window.innerUtil || (function (exports) {
                 // 头部
                 html += '<div class="em-calendar-content week">';
                 // console.log("最终结果：" + JSON.stringify(tmpInfo));
-                innerUtil.each(tmpInfo, function (key, value) {
+                innerWeekUtil.each(tmpInfo, function (key, value) {
                     // 不存在则默认周历
                     if(!_self.options.template) {
                         if(value.date_frame == _self.currentDate) {
@@ -568,31 +541,17 @@ window.innerUtil = window.innerUtil || (function (exports) {
 
             // 上一周
             document.querySelector(_self.options.pre).addEventListener('tap', function () {
-                _self.setDate(_self.addDate(_self.currentFirstDate, -7));
-                preEvent && preEvent(_self.currnetMonth);
+                _self.slidePrev().then(function (currnetMonth) {
+                    preEvent && preEvent(currnetMonth);
+                });
             });
 
             // 下一周
             document.querySelector(_self.options.next).addEventListener('tap', function () {
-                _self.setDate(_self.addDate(_self.currentFirstDate, 7));
-                preEvent && preEvent(_self.currnetMonth);
+                _self.slideNext().then(function (currnetMonth) {
+                    nextEvent && nextEvent(currnetMonth);
+                });
             });
-
-            // 开启是否滑动
-            if(_self.options.isSwipe) {
-                // 开启日历组件右滑(上一周)
-                document.querySelector(_self.options.container).addEventListener('swiperight', function () {
-                    _self.setDate(_self.addDate(_self.currentFirstDate, -7));
-                    preEvent && preEvent(_self.currnetMonth);
-
-                });
-                // 开启日历组件左滑(下一周)
-                document.querySelector(_self.options.container).addEventListener('swipeleft', function () {
-                    _self.setDate(_self.addDate(_self.currentFirstDate, 7));
-                    preEvent && preEvent(_self.currnetMonth);
-
-                });
-            }
 
             // 每项点击事件
             mui(".em-journal-pad").on('tap', 'li', function () {
@@ -611,7 +570,44 @@ window.innerUtil = window.innerUtil || (function (exports) {
         refresh: function () {
             var _this = this;
             _this.setDate(new Date());
-        }
+        },
+        /**
+         * 上一周
+         */
+        slidePrev: function () {
+            var _self = this;
+            return new Promise(function (resolve, reject) {
+                _self.setDate(_self.addDate(_self.currentFirstDate, -7));
+                return resolve(_self.currnetMonth);
+            });
+        },
+
+        /**
+         * 下一周
+         */
+        slideNext: function () {
+            var _self = this;
+            return new Promise(function (resolve, reject) {
+                _self.setDate(_self.addDate(_self.currentFirstDate, 7));
+                return resolve(_self.currnetMonth);
+            });
+        },
+        /**
+         * @description 该方法和Zepto("tap","selector",function(){})一样，都是遍历相同的dom元素并为之绑定监听事件
+         * @param {Object} tap 点击事件
+         * @param {Object} selector 选择器
+         * @param {Object} itemClickCallback 点击回调  
+         */
+        addEventListener: function (tap, selector, itemClickCallback) {
+            [].forEach.call(document.querySelectorAll(selector), function (item, index) {
+                item.addEventListener(tap, function () {
+                    var _this = this;
+                    if(typeof (itemClickCallback) == "function" && itemClickCallback) {
+                        itemClickCallback(item, index);
+                    }
+                });
+            });
+        },
 
     }
 
