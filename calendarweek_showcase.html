@@ -16,7 +16,7 @@
 		<!-- IOS中禁用将数字识别为电话号码/忽略Android平台中对邮箱地址的识别 -->
 		<meta name="format-detection" content="telephone=no, email=no" />
 
-		<link rel="stylesheet" type="text/css" href="libs/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/calendar_base_week.css" />
 
 	</head>
@@ -62,12 +62,12 @@
 				<a class="mui-navigate-right"><span class="week">{{week_frame}}</span><span class="day">{{month_frame}}月{{day_frame}}日</span><span class="status mui-hidden">零</span></a>
 			</li>
 		</script>
-		<script src="libs/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="css/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/mustache.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/calendar_base_week.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			// 初始化
-			var CalendarWeekObject = new CalendarWeek({
+			var weekcalendar = new CalendarWeek({
 				// 默认周历组件容器
 				container: "#weekcalendar",
 				// 上一周元素
@@ -147,7 +147,7 @@
 			
 			// 外部刷新方法
 			document.querySelector('#refresh').addEventListener('tap',function () {
-			   CalendarWeekObject.refresh();     
+			   weekcalendar.refresh();     
 			});
 			
 		</script>
